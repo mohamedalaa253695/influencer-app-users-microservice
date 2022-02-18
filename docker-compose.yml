@@ -1,29 +1,33 @@
 version: "3.8"
 services:
-    queue:
+    users:
         build:
             context: .
             dockerfile: Dockerfile
         environment:
-            DB_HOST: db
-            DB_DATABASE: emails
-            # DB_USERNAME: root
+            DB_HOST: users_db
+            DB_DATABASE: users
             DB_PASSWORD: root
-            # MAIL_HOST: docker.for.mac.localhost
-        command: "php artisan queue:work"
+        command: "php artisan serve --host=0.0.0.0"
         depends_on:
-            - db
+            - users_db
         ports:
-            - 5673:5672
-
-    db:
-        image: mysql:5.7.22
+            - 8000:8000
+        volumes:
+            - .:/app
+        networks:
+            - users
+    users_db:
+        image: mysql:8.0
         environment:
-            MYSQL_DATABASE: emails
-            # MYSQL_USER: root
+            MYSQL_DATABASE: users
             MYSQL_PASSWORD: root
             MYSQL_ROOT_PASSWORD: root
         volumes:
             - ./storage/dbdata:/var/lib/mysql
         ports:
-            - 33067:3306
+            - 33069:3306
+        networks:
+            - users
+networks:
+    users:
