@@ -2,9 +2,9 @@
 namespace App\Http\Controllers;
 
 use Auth;
+// use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\RegisterRequest;
 use Illuminate\Support\Facades\Cookie;
@@ -19,7 +19,6 @@ class AuthController
         if (Auth::attempt($request->only('email', 'password'))) {
             $user = Auth::user();
             $scope = $request->input('scope');
-
             if ($user->isInfluencer() && $scope !== 'influencer') {
                 return response([
                     'error' => 'Access denied!',
@@ -64,19 +63,21 @@ class AuthController
 
     public function user()
     {
-        $user = \Auth::user();
+        // dd('here');
 
-        $resource = new UserResource($user);
+        return Auth::user();
 
-        if ($user->isInfluencer()) {
-            return $resource;
-        }
+        // $resource = new UserResource($user);
 
-        return $resource->additional([
-            'data' => [
-                'permissions' => $user->permissions(),
-            ],
-        ]);
+        // if ($user->isInfluencer()) {
+        //     return $resource;
+        // }
+
+        // return $resource->additional([
+        //     'data' => [
+        //         'permissions' => $user->permissions(),
+        //     ],
+        // ]);
     }
 
     public function updateInfo(UpdateInfoRequest $request)
@@ -85,7 +86,7 @@ class AuthController
 
         $user->update($request->only('first_name', 'last_name', 'email'));
 
-        return response(new UserResource($user), Response::HTTP_ACCEPTED);
+        return response($user, Response::HTTP_ACCEPTED);
     }
 
     public function updatePassword(UpdatePasswordRequest $request)
@@ -96,6 +97,11 @@ class AuthController
             'password' => Hash::make($request->input('password')),
         ]);
 
-        return response(new UserResource($user), Response::HTTP_ACCEPTED);
+        return response($user, Response::HTTP_ACCEPTED);
+    }
+
+    public function authenticated()
+    {
+        return 1;
     }
 }
