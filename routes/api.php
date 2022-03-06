@@ -30,5 +30,5 @@ Route::middleware('auth:api')->group(function () {
     Route::get('scope/{scope}', [AuthController::class, 'scopeCan']);
 });
 
-Route::get('users', [UserController::class, 'index']);
-Route::get('users/{id}', [UserController::class, 'show']);
+// Route::get('users', [UserController::class, 'index']);
+// Route::get('users/{id}', [UserController::class, 'show']);

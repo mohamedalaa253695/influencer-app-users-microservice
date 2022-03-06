@@ -9,8 +9,12 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if (-1 === (int)$request->input('page')) {
+            return User::all();
+            return (object)User::all();
+        }
         return PaginatedResource::collection(User::paginate());
     }
 
