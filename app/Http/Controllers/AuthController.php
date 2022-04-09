@@ -82,7 +82,7 @@ class AuthController
 
     public function updateInfo(UpdateInfoRequest $request)
     {
-        $user = \Auth::user();
+        $user = Auth::user();
 
         $user->update($request->only('first_name', 'last_name', 'email'));
 
@@ -91,6 +91,7 @@ class AuthController
 
     public function updatePassword(UpdatePasswordRequest $request)
     {
+        dd($request->all());
         $user = \Auth::user();
 
         $user->update([

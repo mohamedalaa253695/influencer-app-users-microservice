@@ -17,10 +17,12 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install mysqli \
     && docker-php-ext-install zip \
     && docker-php-ext-install sockets \
-    && docker-php-source delete \
-    && curl -sS https://getcomposer.org/installer | php -- \
-     --install-dir=/usr/local/bin --filename=composer
+    && docker-php-source delete 
+    # && curl -sS https://getcomposer.org/installer | php -- \
+    #  --install-dir=/usr/local/bin --filename=composer
 
-WORKDIR /app
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+
+WORKDIR /home
 COPY . .
 RUN composer install
